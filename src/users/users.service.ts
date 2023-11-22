@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateUserDto } from './DTO/create-user.dto';
 import { UpdateUserDto } from './DTO/update-user.dto';
@@ -47,13 +47,19 @@ export class UsersService {
     findAll(instrument?: 'Vocal' | 'Guitar' | 'Drums' | 'Keyboards' | 'Bass') {
 
         if (instrument) {
-            return this.users.filter(user => user.instrument === instrument);
+            const instrumentsArray = this.users.filter(user => user.instrument === instrument);
+
+            if (instrumentsArray.length === 0) throw new NotFoundException('Instrument\'s Player Not Found');
+
+            return instrumentsArray;
         }
         return this.users
     }
 
     findOne(id: number) {
         const user = this.users.find(user => user.id === id);
+
+        if (!user) throw new NotFoundException('This Instrument Not Found');
 
         return user;
     }
