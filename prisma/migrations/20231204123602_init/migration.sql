@@ -2,7 +2,7 @@
 CREATE TYPE "Role" AS ENUM ('Vocal', 'Guitar', 'Drums', 'Keyboards', 'Bass');
 
 -- CreateTable
-CREATE TABLE "Empoyee" (
+CREATE TABLE "Member" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -10,11 +10,8 @@ CREATE TABLE "Empoyee" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Empoyee_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Member_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Empoyee_name_key" ON "Empoyee"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Empoyee_email_key" ON "Empoyee"("email");
+CREATE UNIQUE INDEX "Member_email_key" ON "Member"("email");

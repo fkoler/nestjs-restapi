@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMemberDto } from './dto/create-member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
+
+import { Prisma } from '@prisma/client';
+import { DatabaseService } from 'src/database/database.service';
+
 
 @Injectable()
 export class MembersService {
-  create(createMemberDto: CreateMemberDto) {
-    return 'This action adds a new member';
+
+  constructor(private readonly databaseService: DatabaseService) { }
+
+  async create(createMemberDto: Prisma.MemberCreateInput) {
+    return this.databaseService.member.create({
+      data: createMemberDto
+    });
   }
 
-  findAll() {
-    return `This action returns all members`;
+  async findAll(instrument?: 'Vocal' | 'Guitar' | 'Drums' | 'Keyboards' | 'Bass') {
+    if (instrument) return this.databaseService.member.findMany({
+      where: {
+        instrument,
+      }
+    });
+
+    return this.databaseService.member.findMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} member`;
+  async findOne(id: number) {
+    return this.databaseService.member.findUnique({
+      where: {
+        id,
+      }
+    });
   }
 
-  update(id: number, updateMemberDto: UpdateMemberDto) {
-    return `This action updates a #${id} member`;
+  async update(id: number, updateMemberDto: Prisma.MemberUpdateInput) {
+    return this.databaseService.member.update({
+      where: {
+        id,
+      },
+      data: updateMemberDto,
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} member`;
+  async remove(id: number) {
+    return this.databaseService.member.delete({
+      where: {
+        id,
+      }
+    });
   }
 }

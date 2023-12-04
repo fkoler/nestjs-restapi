@@ -1,20 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+
 import { MembersService } from './members.service';
-import { CreateMemberDto } from './dto/create-member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
+
 
 @Controller('members')
 export class MembersController {
-  constructor(private readonly membersService: MembersService) {}
+  constructor(private readonly membersService: MembersService) { }
 
   @Post()
-  create(@Body() createMemberDto: CreateMemberDto) {
+  create(@Body() createMemberDto: Prisma.MemberCreateInput) {
     return this.membersService.create(createMemberDto);
   }
 
   @Get()
-  findAll() {
-    return this.membersService.findAll();
+  findAll(@Query('instrument') instrument?: 'Vocal' | 'Guitar' | 'Drums' | 'Keyboards' | 'Bass') {
+    return this.membersService.findAll(instrument);
   }
 
   @Get(':id')
@@ -23,7 +24,7 @@ export class MembersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
+  update(@Param('id') id: string, @Body() updateMemberDto: Prisma.MemberUpdateInput) {
     return this.membersService.update(+id, updateMemberDto);
   }
 
