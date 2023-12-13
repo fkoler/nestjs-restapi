@@ -1,13 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Ip } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 
 import { MembersService } from './members.service';
+import { MyLoggerService } from 'src/my-logger/my-logger.service';
 
 @SkipThrottle()
 @Controller('members')
 export class MembersController {
+
   constructor(private readonly membersService: MembersService) { }
+
+  private readonly logger = new MyLoggerService(MembersController.name)
 
   @Post()
   create(@Body() createMemberDto: Prisma.MemberCreateInput) {
@@ -16,7 +20,9 @@ export class MembersController {
 
   @SkipThrottle({ default: false })
   @Get()
-  findAll(@Query('instrument') instrument?: 'Vocal' | 'Guitar' | 'Drums' | 'Keyboards' | 'Bass') {
+  findAll(@Ip() ip: string, @Query('instrument') instrument?: 'Vocal' | 'Guitar' | 'Drums' | 'Keyboards' | 'Bass') {
+    this.logger.log(`Request for All Members\t ${ip}`);
+
     return this.membersService.findAll(instrument);
   }
 
