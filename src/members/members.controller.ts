@@ -11,7 +11,7 @@ export class MembersController {
 
   constructor(private readonly membersService: MembersService) { }
 
-  private readonly logger = new MyLoggerService(MembersController.name)
+  private readonly logger = new MyLoggerService(MembersController.name);
 
   @Post()
   create(@Body() createMemberDto: Prisma.MemberCreateInput) {
@@ -21,7 +21,7 @@ export class MembersController {
   @SkipThrottle({ default: false })
   @Get()
   findAll(@Ip() ip: string, @Query('instrument') instrument?: 'Vocal' | 'Guitar' | 'Drums' | 'Keyboards' | 'Bass') {
-    this.logger.log(`Request for All Members\t ${ip}`);
+    this.logger.log(`Request for All Members\t${ip}`, MembersController.name);
 
     return this.membersService.findAll(instrument);
   }
